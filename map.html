@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>マップから探す | Allergy Map</title>
+
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/map.css">
+</head>
+
+<body>
+
+    <!-- =========================
+         ヘッダー
+    ========================== -->
+    <header class="header">
+        <div class="header-inner">
+
+            <h1 class="logo">
+                <a href="index.html">Allergy Map</a>
+            </h1>
+
+            <nav class="navigation">
+                <a href="index.html">HOME</a>
+                <a href="index.html#search">検索</a>
+                <a href="map.html">マップ</a>
+            </nav>
+
+        </div>
+    </header>
+
+
+    <main>
+
+        <!-- =========================
+             ページタイトル
+        ========================== -->
+        <section class="map-hero">
+            <h2>マップからお店を探す</h2>
+            <p>地図から近くのアレルギー情報が書いてあるお店を見つけましょう。</p>
+        </section>
+
+
+        <!-- =========================
+             検索・絞り込み
+        ========================== -->
+        <section class="map-search-section">
+
+            <div class="map-search-box">
+                <input
+                    type="text"
+                    placeholder="地域・駅名などで検索"
+                    aria-label="地域や駅名で検索"
+                >
+
+                <button type="button">検索</button>
+            </div>
+
+            <div class="map-filter">
+
+                <h3>アレルギーで絞り込む</h3>
+
+                <div class="map-filter-list">
+
+                    <label>
+                        <input type="checkbox" value="egg"> 卵
+                    </label>
+
+                    <label>
+                        <input type="checkbox" value="milk"> 乳
+                    </label>
+
+                    <label>
+                        <input type="checkbox" value="wheat"> 小麦
+                    </label>
+
+                    <label>
+                        <input type="checkbox" value="peanut"> 落花生
+                    </label>
+
+                    <label>
+                        <input type="checkbox" value="shrimp"> えび
+                    </label>
+
+                    <label>
+                        <input type="checkbox" value="crab"> かに
+                    </label>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             マップ・店舗一覧
+        ========================== -->
+        <section class="map-content">
+
+            <!-- 地図 -->
+            <div class="map-area">
+
+                <div class="map-placeholder">
+
+                    <p class="map-placeholder-text">
+                        MAP AREA
+                    </p>
+
+                    <!-- 店舗マーカー（仮） -->
+                    <span class="map-pin pin-1">📍</span>
+                    <span class="map-pin pin-2">📍</span>
+                    <span class="map-pin pin-3">📍</span>
+                    <span class="map-pin pin-4">📍</span>
+
+                    <div class="map-message">
+                        地図は今後実装予定です
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- 店舗一覧 -->
+            <aside class="map-restaurant-list">
+
+                <h3>周辺のお店</h3>
+
+                <p class="result-count">
+                    3件の店舗が見つかりました
+                </p>
+
+
+                <!-- 店舗カード1 -->
+                <article class="map-restaurant-card">
+
+                    <div class="map-restaurant-image">
+                        <img src="images/restaurant1.jpg" alt="レストランの外観">
+                    </div>
+
+                    <div class="map-restaurant-info">
+
+                        <h4>サンプルレストラン</h4>
+
+                        <p>洋食・レストラン</p>
+
+                        <div class="map-allergy-info">
+                            <span>卵</span>
+                            <span>乳</span>
+                            <span>小麦</span>
+                        </div>
+
+                        <a href="detail.html">詳細を見る →</a>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 店舗カード2 -->
+                <article class="map-restaurant-card">
+
+                    <div class="map-restaurant-image">
+                        <img src="images/restaurant2.jpg" alt="カフェの店内">
+                    </div>
+
+                    <div class="map-restaurant-info">
+
+                        <h4>サンプルカフェ</h4>
+
+                        <p>カフェ</p>
+
+                        <div class="map-allergy-info">
+                            <span>卵</span>
+                            <span>小麦</span>
+                        </div>
+
+                        <a href="detail.html">詳細を見る →</a>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 店舗カード3 -->
+                <article class="map-restaurant-card">
+
+                    <div class="map-restaurant-image">
+                        <img src="images/restaurant3.jpg" alt="和食店の料理">
+                    </div>
+
+                    <div class="map-restaurant-info">
+
+                        <h4>サンプル和食店</h4>
+
+                        <p>和食</p>
+
+                        <div class="map-allergy-info">
+                            <span>乳</span>
+                            <span>えび</span>
+                        </div>
+
+                        <a href="detail.html">詳細を見る →</a>
+
+                    </div>
+
+                </article>
+
+            </aside>
+
+        </section>
+
+         <!-- =========================
+             注意事項
+        ========================== -->
+        <section class="notice-section">
+
+            <h2>ご利用上の注意</h2>
+
+            <p>
+                掲載されているアレルギー情報は、
+                すべてのアレルギー反応を防ぐことを保証するものではありません。
+            </p>
+
+            <p>
+                調理器具や設備の共用などにより、
+                アレルゲンが混入する可能性があります。
+            </p>
+
+            <p>
+                ご利用前に必ず店舗へ直接ご確認ください。
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         フッター
+    ========================== -->
+    <footer class="footer">
+        
+        <p>&copy; 2026 Allergy Map. All Rights Reserved.</p>
+    </footer>
+
+    <script src="js/common.js"></script>
+</body>
+</html>
