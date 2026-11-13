@@ -1,54 +1,91 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Allergy Map</title>
 
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/index.css">
-    
 </head>
 
 <body>
 
-    <!-- ヘッダー -->
+    <!-- =========================
+         ヘッダー
+    ========================== -->
     <header class="header">
-    <div class="header-inner">
+        <div class="header-inner">
 
-        <!-- ロゴ -->
-        <h1 class="logo">
-            <a href="index.html">Allergy Map</a>
-        </h1>
+            <h1 class="logo">
+                <a href="index.html">Allergy Map</a>
+            </h1>
 
-        <!-- ナビゲーション -->
-        <nav class="navigation">
-            <a href="index.html">HOME</a>
-            <a href="index.html#search">検索</a>
-            <a href="map.html">マップ</a>
-        </nav>
+            <nav class="navigation">
+                <a href="index.html">HOME</a>
+                <a href="index.html#search">検索</a>
+                <a href="index.html#notice">店舗一覧</a>
+                <a href="map.html">マップ</a>
+            </nav>
 
-    </div>
+        </div>
     </header>
+
 
     <main>
 
-        <!-- メインビジュアル -->
+        <!-- =========================
+             サイト紹介
+        ========================== -->
         <section class="hero">
-            <h2>安心してお店を選べるように。</h2>
+
+            <h2>自分に合ったお店を見つけよう。</h2>
+
             <p>
                 アレルギー情報を確認して、
-                自分に合った飲食店を探しましょう。
+                安心してお店を選ぶための飲食店検索サイトです。
             </p>
+
         </section>
 
-        <!-- 検索エリア -->
+
+        <!-- =========================
+             注意事項
+        ========================== -->
+        <section class="notice-section">
+
+            <h2>ご利用上の注意</h2>
+
+            <p>
+                掲載されているアレルギー情報は、
+                すべてのアレルギー反応を防ぐことを保証するものではありません。
+            </p>
+
+            <p>
+                調理器具や設備の共用などにより、
+                アレルゲンが混入する可能性があります。
+            </p>
+
+            <p>
+                ご利用前に必ず店舗へ直接ご確認ください。
+            </p>
+
+        </section>
+
+
+        <!-- =========================
+             店舗検索
+        ========================== -->
         <section class="search-section" id="search">
 
             <h2>お店を探す</h2>
 
+            <!-- 店舗名・地域検索 -->
             <div class="search-box">
+
                 <input
                     type="text"
                     placeholder="店名・地域・駅名などで検索"
@@ -56,7 +93,9 @@
                 >
 
                 <button type="button">検索</button>
+
             </div>
+
 
             <!-- アレルギー検索 -->
             <div class="allergy-filter">
@@ -64,48 +103,43 @@
                 <h3>アレルギーから探す</h3>
 
                 <div class="allergy-list">
+
                     <label>
-                        <input type="checkbox" name="allergy" value="egg">
-                        卵
+                        <input type="checkbox" value="egg"> 卵
                     </label>
 
                     <label>
-                        <input type="checkbox" name="allergy" value="milk">
-                        乳
+                        <input type="checkbox" value="milk"> 乳
                     </label>
 
                     <label>
-                        <input type="checkbox" name="allergy" value="wheat">
-                        小麦
+                        <input type="checkbox" value="wheat"> 小麦
                     </label>
 
                     <label>
-                        <input type="checkbox" name="allergy" value="peanut">
-                        落花生
+                        <input type="checkbox" value="peanut"> 落花生
                     </label>
 
                     <label>
-                        <input type="checkbox" name="allergy" value="shrimp">
-                        えび
+                        <input type="checkbox" value="shrimp"> えび
                     </label>
 
                     <label>
-                        <input type="checkbox" name="allergy" value="crab">
-                        かに
+                        <input type="checkbox" value="crab"> かに
                     </label>
 
                     <label>
-                        <input type="checkbox" name="allergy" value="buckwheat">
-                        そば
+                        <input type="checkbox" value="buckwheat"> そば
                     </label>
 
                     <label>
-                        <input type="checkbox" name="allergy" value="walnut">
-                        くるみ
+                        <input type="checkbox" value="walnut"> くるみ
                     </label>
+
                 </div>
 
             </div>
+
 
             <!-- ジャンル検索 -->
             <div class="genre-filter">
@@ -113,25 +147,34 @@
                 <h3>お店のジャンル</h3>
 
                 <select name="genre">
+
                     <option value="">すべてのジャンル</option>
                     <option value="japanese">和食</option>
                     <option value="western">洋食</option>
                     <option value="chinese">中華</option>
                     <option value="cafe">カフェ</option>
                     <option value="fastfood">ファストフード</option>
+
                 </select>
 
             </div>
 
         </section>
 
-        <!-- 店舗一覧 -->
-        <section class="restaurant-section">
+
+        <!-- =========================
+             店舗一覧
+        ========================== -->
+        <section class="restaurant-section" id="notice">
 
             <div class="section-heading">
+
                 <h2>店舗一覧</h2>
+
                 <a href="map.html">マップで見る →</a>
+
             </div>
+
 
             <div class="restaurant-list">
 
@@ -139,7 +182,7 @@
                 <article class="restaurant-card">
 
                     <div class="restaurant-image">
-                        <img src="images/restaurant1.jpg" alt="レストランの外観">
+                        <img src="images/restaurant1.jpg" alt="店舗の外観">
                     </div>
 
                     <div class="restaurant-info">
@@ -170,6 +213,7 @@
 
                 </article>
 
+
                 <!-- 店舗カード 2 -->
                 <article class="restaurant-card">
 
@@ -194,6 +238,109 @@
 
                         <p class="information-status">
                             情報提供元：店舗確認済み
+                        </p>
+
+                        <a href="detail.html" class="detail-link">
+                            詳細を見る
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 店舗カード 3 -->
+                <article class="restaurant-card">
+
+                    <div class="restaurant-image">
+                        <img src="images/restaurant3.jpg" alt="和食店の料理">
+                    </div>
+
+                    <div class="restaurant-info">
+
+                        <h3>サンプル和食店</h3>
+
+                        <p class="restaurant-genre">和食</p>
+
+                        <p class="restaurant-address">
+                            大阪府大阪市西区
+                        </p>
+
+                        <div class="allergy-info">
+                            <span>乳</span>
+                            <span>えび</span>
+                        </div>
+
+                        <p class="information-status">
+                            情報提供元：ユーザー投稿
+                        </p>
+
+                        <a href="detail.html" class="detail-link">
+                            詳細を見る
+                        </a>
+
+                    </div>
+
+                </article>
+
+                <!-- 店舗カード 3 -->
+                <article class="restaurant-card">
+
+                    <div class="restaurant-image">
+                        <img src="images/restaurant3.jpg" alt="和食店の料理">
+                    </div>
+
+                    <div class="restaurant-info">
+
+                        <h3>サンプル和食店</h3>
+
+                        <p class="restaurant-genre">和食</p>
+
+                        <p class="restaurant-address">
+                            大阪府大阪市西区
+                        </p>
+
+                        <div class="allergy-info">
+                            <span>乳</span>
+                            <span>えび</span>
+                        </div>
+
+                        <p class="information-status">
+                            情報提供元：ユーザー投稿
+                        </p>
+
+                        <a href="detail.html" class="detail-link">
+                            詳細を見る
+                        </a>
+
+                    </div>
+
+                </article>
+
+                <!-- 店舗カード 3 -->
+                <article class="restaurant-card">
+
+                    <div class="restaurant-image">
+                        <img src="images/restaurant3.jpg" alt="和食店の料理">
+                    </div>
+
+                    <div class="restaurant-info">
+
+                        <h3>サンプル和食店</h3>
+
+                        <p class="restaurant-genre">和食</p>
+
+                        <p class="restaurant-address">
+                            大阪府大阪市西区
+                        </p>
+
+                        <div class="allergy-info">
+                            <span>乳</span>
+                            <span>えび</span>
+                        </div>
+
+                        <p class="information-status">
+                            情報提供元：ユーザー投稿
                         </p>
 
                         <a href="detail.html" class="detail-link">
@@ -242,34 +389,21 @@
 
         </section>
 
-        <!-- 注意事項 -->
-        <section class="notice-section">
-            <h2>ご利用上の注意</h2>
-
-            <p>
-                掲載されているアレルギー情報は、すべてのアレルギー反応を
-                防ぐことを保証するものではありません。
-            </p>
-
-            <p>
-                食材の変更や調理器具の共用などによって、
-                アレルゲンが混入する可能性があります。
-            </p>
-
-            <p>
-                ご利用前に必ず店舗へ直接ご確認ください。
-            </p>
-        </section>
-
     </main>
 
-    <!-- フッター -->
-   
+
+    <!-- =========================
+         フッター
+    ========================== -->
     <footer class="footer">
+
         <p>&copy; 2026 Allergy Map. All Rights Reserved.</p>
+
     </footer>
 
-    //javascriptファイルの読み込み
+
+    <!-- JavaScript -->
     <script src="js/common.js"></script>
+
 </body>
 </html>

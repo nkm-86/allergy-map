@@ -1,0 +1,342 @@
+
+/* =========================
+   メインビジュアル
+========================= */
+
+.hero {
+    padding: 80px 20px;
+    text-align: center;
+    background-color: #F1EEE5;
+}
+
+.hero h2 {
+    font-size: 32px;
+    color: #657C63;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 16px;
+    color: #555555;
+    line-height: 1.8;
+}
+
+
+/* =========================
+   検索エリア
+========================= */
+
+.search-section {
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 40px;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+.search-section h2 {
+    font-size: 24px;
+    margin-bottom: 25px;
+    color: #444444;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 35px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 14px;
+    border: 1px solid #DDD8CD;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.search-box button {
+    padding: 0 30px;
+    border: none;
+    border-radius: 6px;
+    background-color: #657C63;
+    color: #FFFFFF;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.search-box button:hover {
+    background-color: #50664F;
+}
+
+
+/* =========================
+   アレルギー検索
+========================= */
+
+.allergy-filter,
+.genre-filter {
+    margin-bottom: 30px;
+}
+
+.allergy-filter h3,
+.genre-filter h3 {
+    font-size: 17px;
+    margin-bottom: 15px;
+    color: #555555;
+}
+
+.allergy-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.allergy-list label {
+    padding: 10px 18px;
+    background-color: #F5F3ED;
+    border: 1px solid #E5E0D5;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.allergy-list input {
+    margin-right: 5px;
+    accent-color: #657C63;
+}
+
+.genre-filter select {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px;
+    border: 1px solid #DDD8CD;
+    border-radius: 6px;
+    background-color: #FFFFFF;
+    font-size: 14px;
+}
+
+
+/* =========================
+   店舗一覧
+========================= */
+
+.restaurant-section {
+    max-width: 1100px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.section-heading h2 {
+    font-size: 25px;
+    color: #444444;
+}
+
+.section-heading a {
+    color: #657C63;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.section-heading a:hover {
+    text-decoration: underline;
+}
+
+
+/* 店舗カード一覧 */
+
+.restaurant-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.restaurant-card {
+    overflow: hidden;
+    background-color: #FFFFFF;
+    border: 1px solid #EAE5DC;
+    border-radius: 10px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.restaurant-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+
+/* 店舗画像 */
+
+.restaurant-image {
+    width: 100%;
+    height: 190px;
+    background-color: #EAE5DC;
+}
+
+.restaurant-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* 店舗情報 */
+
+.restaurant-info {
+    padding: 20px;
+}
+
+.restaurant-info h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333333;
+}
+
+.restaurant-genre,
+.restaurant-address {
+    font-size: 13px;
+    color: #777777;
+    margin-bottom: 8px;
+}
+
+
+/* アレルギー情報 */
+
+.allergy-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: 15px 0;
+}
+
+.allergy-info span {
+    padding: 5px 12px;
+    background-color: #F1EEE5;
+    border-radius: 15px;
+    color: #657C63;
+    font-size: 12px;
+}
+
+
+/* 情報の出典 */
+
+.information-status {
+    font-size: 12px;
+    color: #888888;
+    margin-bottom: 15px;
+}
+
+
+/* 詳細ボタン */
+
+.detail-link {
+    display: block;
+    padding: 11px;
+    background-color: #657C63;
+    color: #FFFFFF;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.detail-link:hover {
+    background-color: #50664F;
+}
+
+
+/* =========================
+   注意事項
+========================= */
+
+.notice-section {
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 30px;
+    background-color: #F1EEE5;
+    border-radius: 10px;
+}
+
+.notice-section h2 {
+    font-size: 20px;
+    color: #657C63;
+    margin-bottom: 15px;
+}
+
+.notice-section p {
+    font-size: 13px;
+    line-height: 1.8;
+    color: #666666;
+    margin-bottom: 5px;
+}
+
+
+/* =========================
+   スマホ対応
+========================= */
+
+@media screen and (max-width: 768px) {
+
+    .hero {
+        padding: 55px 15px;
+    }
+
+    .hero h2 {
+        font-size: 23px;
+    }
+
+    .hero p {
+        font-size: 14px;
+    }
+
+    .search-section {
+        margin: 30px 15px;
+        padding: 25px 20px;
+    }
+
+    .search-section h2 {
+        font-size: 21px;
+    }
+
+    .search-box button {
+        padding: 0 18px;
+    }
+
+    .allergy-list {
+        gap: 8px;
+    }
+
+    .allergy-list label {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .restaurant-section {
+        margin: 40px auto;
+    }
+
+    .restaurant-list {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .restaurant-image {
+        height: 200px;
+    }
+
+    .section-heading h2 {
+        font-size: 21px;
+    }
+
+    .notice-section {
+        margin: 40px 15px;
+        padding: 20px;
+    }
+}

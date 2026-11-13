@@ -137,4 +137,7 @@ body {
     .navigation a[href="index.html#search"] {
         display: none;
     }
+    .navigation a[href="index.html#notice"] {
+        display: none;
+    }
 }
