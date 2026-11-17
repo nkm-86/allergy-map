@@ -41,10 +41,11 @@ $restaurants = $stmt->fetchAll();
     <title>マップから探す | Allergy Map</title>
 
     <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="css/map.css">
 </head>
 
-<body>
+<body class="map-page">
 
     <!-- =========================
          ヘッダー
@@ -72,8 +73,9 @@ $restaurants = $stmt->fetchAll();
              ページタイトル
         ========================== -->
         <section class="map-hero">
-            <h2>マップからお店を探す</h2>
-            <p>地図から近くのアレルギー情報が書いてあるお店を見つけましょう。</p>
+            <div class="map-eyebrow">EXPLORE RESTAURANTS</div>
+            <h2>あなたに合うお店を、地図から。</h2>
+            <p>エリアとアレルギー情報を見比べながら、次の食事の行き先を。</p>
         </section>
 
 
@@ -128,43 +130,31 @@ $restaurants = $stmt->fetchAll();
             <!-- 地図 -->
             <div class="map-area">
 
-                <div class="map-placeholder">
-
-                    <p class="map-placeholder-text">
-                        MAP AREA
-                    </p>
-
-                    <!-- 店舗マーカー（仮） -->
-                    <span class="map-pin pin-1">📍</span>
-                    <span class="map-pin pin-2">📍</span>
-                    <span class="map-pin pin-3">📍</span>
-                    <span class="map-pin pin-4">📍</span>
-
-                    <div class="map-message">
-                        地図は今後実装予定です
-                    </div>
-
-                </div>
-
+                <div class="map-panel-heading"><div><span class="map-live-dot"></span> 梅田・大阪駅周辺</div><button type="button" id="show-all">すべて表示 ↗</button></div>
+                <div id="restaurant-map" role="region" aria-label="店舗の位置を表示する地図"><p class="map-fallback">地図を読み込み中です。店舗情報は一覧からご覧いただけます。</p></div>
+                <p class="map-location-note">ピンは住所付近の目安です。正確な場所は店舗詳細でご確認ください。</p>
+                <div class="map-selected" id="map-selected" aria-live="polite">店舗の「地図で見る」か、地図の番号を選んでください。</div>
             </div>
 
 
-            <!-- 店舗一覧 -->
-            <aside class="map-restaurant-list">
 
-                <h3>周辺のお店</h3>
+            <!-- 店舗一覧 -->
+            <aside class="map-restaurant-list" aria-label="検索結果の店舗一覧">
+
+                <div class="results-eyebrow">RESTAURANTS NEAR YOU</div><h3>周辺のお店</h3>
 
                 <p class="result-count">
                     <?= count($restaurants) ?>件の店舗が見つかりました
                 </p>
 
-                <?php foreach ($restaurants as $restaurant): ?>
+                <div class="map-card-grid">
+                <?php foreach ($restaurants as $index => $restaurant): ?>
                     <?php
                     $tags = array_filter(array_map('trim', explode(',', $restaurant['allergy_tags'])));
                     ?>
-                    <article class="map-restaurant-card">
+                    <article class="map-restaurant-card" data-name="<?= htmlspecialchars($restaurant['name'], ENT_QUOTES, 'UTF-8') ?>" data-address="<?= htmlspecialchars($restaurant['address'], ENT_QUOTES, 'UTF-8') ?>">
 
-                        <div class="map-restaurant-image">
+                        <div class="map-restaurant-image"><span class="card-number"><?= $index + 1 ?></span>
                             <img
                                 src="<?= htmlspecialchars($restaurant['image_path'], ENT_QUOTES, 'UTF-8') ?>"
                                 alt="<?= htmlspecialchars($restaurant['name'], ENT_QUOTES, 'UTF-8') ?>"
@@ -175,7 +165,7 @@ $restaurants = $stmt->fetchAll();
 
                             <h4><?= htmlspecialchars($restaurant['name'], ENT_QUOTES, 'UTF-8') ?></h4>
 
-                            <p><?= htmlspecialchars($restaurant['genre'], ENT_QUOTES, 'UTF-8') ?></p>
+                            <p class="card-genre"><?= htmlspecialchars($restaurant['genre'], ENT_QUOTES, 'UTF-8') ?></p><p class="card-address"><?= htmlspecialchars($restaurant['address'], ENT_QUOTES, 'UTF-8') ?></p>
 
                             <div class="map-allergy-info">
                                 <?php foreach ($tags as $tag): ?>
@@ -183,13 +173,14 @@ $restaurants = $stmt->fetchAll();
                                 <?php endforeach; ?>
                             </div>
 
-                            <a href="detail.php?id=<?= (int)$restaurant['id'] ?>">詳細を見る →</a>
+                            <div class="card-actions"><button type="button" class="show-on-map">地図で見る</button><a href="detail.php?id=<?= (int)$restaurant['id'] ?>">店舗詳細 ↗</a></div>
 
                         </div>
 
                     </article>
                 <?php endforeach; ?>
-
+                </div>
+                <?php if (!$restaurants): ?><p class="map-empty">条件に合うお店が見つかりませんでした。条件を変えて検索してください。</p><?php endif; ?>
             </aside>
 
         </section>
@@ -227,6 +218,7 @@ $restaurants = $stmt->fetchAll();
         <p>&copy; 2026 Allergy Map. All Rights Reserved.</p>
     </footer>
 
-    <script src="js/common.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/map.js"></script>
 </body>
 </html>

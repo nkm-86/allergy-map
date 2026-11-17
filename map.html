@@ -9,10 +9,11 @@
     <title>マップから探す | Allergy Map</title>
 
     <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="css/map.css">
 </head>
 
-<body>
+<body class="map-page">
 
     <!-- =========================
          ヘッダー
@@ -40,8 +41,9 @@
              ページタイトル
         ========================== -->
         <section class="map-hero">
-            <h2>マップからお店を探す</h2>
-            <p>地図から近くのアレルギー情報が書いてあるお店を見つけましょう。</p>
+            <div class="map-eyebrow">EXPLORE RESTAURANTS</div>
+            <h2>あなたに合うお店を、地図から。</h2>
+            <p>エリアとアレルギー情報を見比べながら、次の食事の行き先を。</p>
         </section>
 
 
@@ -50,14 +52,14 @@
         ========================== -->
         <section class="map-search-section">
 
-            <div class="map-search-box">
+            <form class="preview-search"><div class="map-search-box">
                 <input
                     type="text"
                     placeholder="地域・駅名などで検索"
                     aria-label="地域や駅名で検索"
                 >
 
-                <button type="button">検索</button>
+                <button type="submit">検索</button>
             </div>
 
             <div class="map-filter">
@@ -94,6 +96,7 @@
 
             </div>
 
+        </form>
         </section>
 
 
@@ -105,113 +108,182 @@
             <!-- 地図 -->
             <div class="map-area">
 
-                <div class="map-placeholder">
-
-                    <p class="map-placeholder-text">
-                        MAP AREA
-                    </p>
-
-                    <!-- 店舗マーカー（仮） -->
-                    <span class="map-pin pin-1">📍</span>
-                    <span class="map-pin pin-2">📍</span>
-                    <span class="map-pin pin-3">📍</span>
-                    <span class="map-pin pin-4">📍</span>
-
-                    <div class="map-message">
-                        地図は今後実装予定です
-                    </div>
-
-                </div>
-
+                <div class="map-panel-heading"><div><span class="map-live-dot"></span> 梅田・大阪駅周辺</div><button type="button" id="show-all">すべて表示 ↗</button></div>
+                <div id="restaurant-map" role="region" aria-label="店舗の位置を表示する地図"><p class="map-fallback">地図を読み込み中です。店舗情報は一覧からご覧いただけます。</p></div>
+                <p class="map-location-note">ピンは住所付近の目安です。正確な場所は店舗詳細でご確認ください。</p>
+                <div class="map-selected" id="map-selected" aria-live="polite">店舗の「地図で見る」か、地図の番号を選んでください。</div>
             </div>
 
 
             <!-- 店舗一覧 -->
-            <aside class="map-restaurant-list">
+            <aside class="map-restaurant-list" aria-label="検索結果の店舗一覧">
 
-                <h3>周辺のお店</h3>
+                <div class="results-eyebrow">RESTAURANTS NEAR YOU</div><h3>周辺のお店</h3>
 
-                <p class="result-count">
-                    3件の店舗が見つかりました
-                </p>
-
-
-                <!-- 店舗カード1 -->
-                <article class="map-restaurant-card">
-
-                    <div class="map-restaurant-image">
-                        <img src="images/restaurant1.jpg" alt="レストランの外観">
+                <p class="result-count"> 10件の店舗が見つかりました</p><div class="map-card-grid"><article class="map-restaurant-card">
+                    <div class="map-restaurant-image"><span class="card-number">1</span>
+                        <img src="img/SUSHIRO.jpeg" alt="店舗のイメージ画像">
                     </div>
-
                     <div class="map-restaurant-info">
-
-                        <h4>サンプルレストラン</h4>
-
-                        <p>洋食・レストラン</p>
-
+                        <h4>スシロー 梅田茶屋町店</h4>
+                        <p class="card-genre">和食・回転寿司</p>
+                        <p class="card-address">大阪府大阪市北区茶屋町2-16 イースクエア茶屋町6階</p>
                         <div class="map-allergy-info">
-                            <span>卵</span>
-                            <span>乳</span>
-                            <span>小麦</span>
+                            <span>卵不使用あり</span>
+                            <span>乳不使用あり</span>
+                            <span>小麦不使用あり</span>
                         </div>
-
-                        <a href="detail.html">詳細を見る →</a>
-
+                        
+                        <div class="card-actions"><button type="button" class="show-on-map">地図で見る</button><a href="detail.php?id=1">店舗詳細 ↗</a></div>
                     </div>
-
                 </article>
-
-
-                <!-- 店舗カード2 -->
-                <article class="map-restaurant-card">
-
-                    <div class="map-restaurant-image">
-                        <img src="images/restaurant2.jpg" alt="カフェの店内">
+<article class="map-restaurant-card">
+                    <div class="map-restaurant-image"><span class="card-number">2</span>
+                        <img src="img/BikkuriDonki.jpg" alt="店舗のイメージ画像">
                     </div>
-
                     <div class="map-restaurant-info">
-
-                        <h4>サンプルカフェ</h4>
-
-                        <p>カフェ</p>
-
+                        <h4>びっくりドンキー 梅田東店</h4>
+                        <p class="card-genre">洋食・ハンバーグ</p>
+                        <p class="card-address">大阪府大阪市北区堂山町1-5 三共梅田ビル2F</p>
                         <div class="map-allergy-info">
-                            <span>卵</span>
-                            <span>小麦</span>
+                            <span>卵不使用あり</span>
+                            <span>乳不使用あり</span>
+                            <span>小麦不使用あり</span>
                         </div>
-
-                        <a href="detail.html">詳細を見る →</a>
-
+                        
+                        <div class="card-actions"><button type="button" class="show-on-map">地図で見る</button><a href="detail.php?id=2">店舗詳細 ↗</a></div>
                     </div>
-
                 </article>
-
-
-                <!-- 店舗カード3 -->
-                <article class="map-restaurant-card">
-
-                    <div class="map-restaurant-image">
-                        <img src="images/restaurant3.jpg" alt="和食店の料理">
+<article class="map-restaurant-card">
+                    <div class="map-restaurant-image"><span class="card-number">3</span>
+                        <img src="img/Yoshinoya.png" alt="店舗のイメージ画像">
                     </div>
-
                     <div class="map-restaurant-info">
-
-                        <h4>サンプル和食店</h4>
-
-                        <p>和食</p>
-
+                        <h4>吉野家 新梅田食堂街店</h4>
+                        <p class="card-genre">和食・牛丼</p>
+                        <p class="card-address">大阪府大阪市北区角田町9-17</p>
                         <div class="map-allergy-info">
-                            <span>乳</span>
-                            <span>えび</span>
+                            <span>アレルゲン一覧表あり</span>
+                            <span>一部要確認</span>
                         </div>
-
-                        <a href="detail.html">詳細を見る →</a>
-
+                        
+                        <div class="card-actions"><button type="button" class="show-on-map">地図で見る</button><a href="detail.php?id=3">店舗詳細 ↗</a></div>
                     </div>
-
                 </article>
-
-            </aside>
+<article class="map-restaurant-card">
+                    <div class="map-restaurant-image"><span class="card-number">4</span>
+                        <img src="img/Supustock.jpg" alt="店舗のイメージ画像">
+                    </div>
+                    <div class="map-restaurant-info">
+                        <h4>スープストック東京 ルクア大阪店</h4>
+                        <p class="card-genre">カフェ・スープ</p>
+                        <p class="card-address">大阪府大阪市北区梅田3-1-3 ルクア大阪内B1F</p>
+                        <div class="map-allergy-info">
+                            <span>アレルギー一覧表あり</span>
+                        </div>
+                        
+                        <div class="card-actions"><button type="button" class="show-on-map">地図で見る</button><a href="detail.php?id=4">店舗詳細 ↗</a></div>
+                    </div>
+                </article>
+<article class="map-restaurant-card">
+                    <div class="map-restaurant-image"><span class="card-number">5</span>
+                        <img src="img/KosmeKitchen.jpg" alt="店舗のイメージ画像">
+                    </div>
+                    <div class="map-restaurant-info">
+                        <h4>コスメキッチンアダプテーション</h4>
+                        <p class="card-genre">カフェ・レストラン</p>
+                        <p class="card-address">大阪府大阪市北区梅田1-13-13 阪神百貨店3F</p>
+                        <div class="map-allergy-info">
+                            <span>アレルゲン記載メニュー表あり</span>
+                        </div>
+                        
+                        <div class="card-actions"><button type="button" class="show-on-map">地図で見る</button><a href="detail.php?id=5">店舗詳細 ↗</a></div>
+                    </div>
+                </article>
+<article class="map-restaurant-card">
+                    <div class="map-restaurant-image"><span class="card-number">6</span>
+                        <img src="img/AnosakiKonosaki.jpg" alt="店舗のイメージ画像">
+                    </div>
+                    <div class="map-restaurant-info">
+                        <h4>アノサキコノサキ</h4>
+                        <p class="card-genre">カフェ・ランチ</p>
+                        <p class="card-address">大阪府大阪市北区中崎西1丁目2-5 エスパシオン中崎 1階</p>
+                        <div class="map-allergy-info">
+                            <span>卵不使用ランチ</span>
+                            <span>乳不使用ランチ</span>
+                            <span>小麦不使用ランチ</span>
+                        </div>
+                        
+                        <div class="card-actions"><button type="button" class="show-on-map">地図で見る</button><a href="detail.php?id=6">店舗詳細 ↗</a></div>
+                    </div>
+                </article>
+<article class="map-restaurant-card">
+                    <div class="map-restaurant-image"><span class="card-number">7</span>
+                        <img src="img/TIERRA.png" alt="店舗のイメージ画像">
+                    </div>
+                    <div class="map-restaurant-info">
+                        <h4>お野菜ガーデンTIERRA</h4>
+                        <p class="card-genre">洋食・レストラン</p>
+                        <p class="card-address">大阪府大阪市北区角田町8-7 阪急うめだ本店13F</p>
+                        <div class="map-allergy-info">
+                            <span>卵不使用あり</span>
+                            <span>乳不使用あり</span>
+                            <span>店頭表あり</span>
+                        </div>
+                        
+                        <div class="card-actions"><button type="button" class="show-on-map">地図で見る</button><a href="detail.php?id=7">店舗詳細 ↗</a></div>
+                    </div>
+                </article>
+<article class="map-restaurant-card">
+                    <div class="map-restaurant-image"><span class="card-number">8</span>
+                        <img src="img/YOKOZUNA.png" alt="店舗のイメージ画像">
+                    </div>
+                    <div class="map-restaurant-info">
+                        <h4>ラーメン横綱（梅田阪急三番街）</h4>
+                        <p class="card-genre">中華・ラーメン</p>
+                        <p class="card-address">大阪府大阪市北区芝田1-1-3 梅田阪急三番街B2F</p>
+                        <div class="map-allergy-info">
+                            <span>卵不使用あり</span>
+                            <span>乳不使用あり</span>
+                            <span>アレルゲン表あり</span>
+                        </div>
+                        
+                        <div class="card-actions"><button type="button" class="show-on-map">地図で見る</button><a href="detail.php?id=8">店舗詳細 ↗</a></div>
+                    </div>
+                </article>
+<article class="map-restaurant-card">
+                    <div class="map-restaurant-image"><span class="card-number">9</span>
+                        <img src="img/Dlintaru.jpg" alt="店舗のイメージ画像">
+                    </div>
+                    <div class="map-restaurant-info">
+                        <h4>鼎泰豊（ディンタイフォン）ルクア大阪店</h4>
+                        <p class="card-genre">中華・点心</p>
+                        <p class="card-address">大阪府大阪市北区梅田3丁目1-3 ルクア大阪 10F</p>
+                        <div class="map-allergy-info">
+                            <span>卵不使用あり</span>
+                            <span>乳不使用あり</span>
+                            <span>アレルギー表あり</span>
+                        </div>
+                        
+                        <div class="card-actions"><button type="button" class="show-on-map">地図で見る</button><a href="detail.php?id=9">店舗詳細 ↗</a></div>
+                    </div>
+                </article>
+<article class="map-restaurant-card">
+                    <div class="map-restaurant-image"><span class="card-number">10</span>
+                        <img src="img/YUNYUN.jpg" alt="店舗のイメージ画像">
+                    </div>
+                    <div class="map-restaurant-info">
+                        <h4>ユンユン ルクア大阪店（YUNYUN）</h4>
+                        <p class="card-genre">中華料理・飲茶・点心</p>
+                        <p class="card-address">大阪府大阪市北区梅田3-1-3 ルクアイーレ B2F キッチン&amp;マーケット内</p>
+                        <div class="map-allergy-info">
+                            <span>米粉麺あり</span>
+                            <span>卵抜き相談可</span>
+                        </div>
+                        
+                        <div class="card-actions"><button type="button" class="show-on-map">地図で見る</button><a href="detail.php?id=10">店舗詳細 ↗</a></div>
+                    </div>
+                </article></div><p class="map-empty" hidden>条件に合うお店が見つかりませんでした。</p></aside>
 
         </section>
 
@@ -249,6 +321,7 @@
         <p>&copy; 2026 Allergy Map. All Rights Reserved.</p>
     </footer>
 
-    <script src="js/common.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/map.js"></script>
 </body>
 </html>
