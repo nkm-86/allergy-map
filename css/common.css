@@ -141,3 +141,4 @@ body {
         display: none;
     }
 }
+.official-filters{display:flex;flex-wrap:wrap;gap:16px;align-items:center;width:100%;margin:16px 0 4px;font-size:12px;color:#50664f}.official-filters p{width:100%;line-height:1.8}.official-filters select{padding:10px;border:1px solid #ddd8cd;border-radius:6px;background:white;max-width:100%}.official-filters input{accent-color:#657c63}

@@ -85,8 +85,12 @@ if ($restaurant) {
             </section>
         <?php else: ?>
             <?php
-            $tags = array_filter(array_map('trim', explode(',', $restaurant['allergy_tags'])));
-            $supported_codes = array_filter(array_map('trim', explode(',', $restaurant['allergy_codes'])));
+            $tags = officialTags($pdo, (int)$restaurant['id']);
+            $sources_stmt=$pdo->prepare('SELECT * FROM allergy_sources WHERE restaurant_id=? ORDER BY id');
+            $sources_stmt->execute([$restaurant['id']]);
+            $sources=$sources_stmt->fetchAll();
+            $supported_codes = publishedCodes($pdo, (int)$restaurant['id']);
+            $coverage = allergenCoverage($pdo, (int)$restaurant['id']);
             $map_query = rawurlencode($restaurant['name'] . ' ' . $restaurant['address']);
             ?>
 
@@ -133,7 +137,7 @@ if ($restaurant) {
                         </p>
 
                         <div class="detail-tag-section">
-                            <p class="detail-tag-heading">アレルギー対応のポイント</p>
+                            <p class="detail-tag-heading">公式情報の確認状況</p>
                             <div class="detail-tags">
                                 <?php foreach ($tags as $tag): ?>
                                     <span class="tag-pill"><?= htmlspecialchars($tag, ENT_QUOTES, 'UTF-8') ?></span>
@@ -142,19 +146,8 @@ if ($restaurant) {
                         </div>
 
                         <div class="detail-source-box">
-                            <p class="detail-source">
-                                <?= htmlspecialchars($restaurant['information_status'], ENT_QUOTES, 'UTF-8') ?>
-                            </p>
-                            <?php if (!empty($restaurant['source_url'])): ?>
-                                <a
-                                    href="<?= htmlspecialchars($restaurant['source_url'], ENT_QUOTES, 'UTF-8') ?>"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="source-url-btn"
-                                >
-                                    <span>🔗</span> 情報元のページ（公式HP等）を確認する ↗
-                                </a>
-                            <?php endif; ?>
+                            <p class="detail-source">既存URLは内容未確認として移行しています。下記の情報源をご確認ください。</p>
+
                         </div>
 
                     </div>
@@ -169,7 +162,7 @@ if ($restaurant) {
 
                     <div class="panel-header">
                         <h3>特定原材料8品目の情報</h3>
-                        <p>現在登録されているデータに基づく、特定原材料8品目の不使用・対応メニュー情報です。</p>
+                        <p>公式情報で各品目の記載を確認できているかを表示します。不使用・安全性を示すものではありません。</p>
                     </div>
 
                     <div class="allergy-matrix">
@@ -182,9 +175,9 @@ if ($restaurant) {
                                 <span class="allergy-icon"><?= $icon ?></span>
                                 <span class="allergy-name"><?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?></span>
                                 <?php if ($is_supported): ?>
-                                    <span class="allergy-status status-ok">対応・不使用あり</span>
+                                    <span class="allergy-status status-ok">公式資料に記載確認済み</span>
                                 <?php else: ?>
-                                    <span class="allergy-status status-check">公式・店頭で要確認</span>
+                                    <span class="allergy-status status-check"><?= ($coverage[$code] ?? 'not_confirmed') === 'not_applicable' ? '資料の対象外' : '記載未確認' ?></span>
                                 <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
@@ -192,8 +185,7 @@ if ($restaurant) {
 
                     <div class="allergy-note-box">
                         <p>
-                            ※「対応・不使用あり」は対象アレルゲンを使用しないメニューや代替対応（米粉麺・卵抜き相談など）が確認されている項目です。<br>
-                            ※「アレルゲン一覧表あり」「店頭表あり」の店舗では、上記以外の品目についても公式HPまたは店頭の成分表で確認できます。
+                            ※公式資料への記載確認は、アレルゲン不使用を意味しません。未確認の情報も不使用として扱いません。利用前に公式資料と店舗へご確認ください。
                         </p>
                     </div>
 
@@ -240,23 +232,9 @@ if ($restaurant) {
                             </div>
                             <div>
                                 <dt>情報提供元</dt>
-                                <dd><?= htmlspecialchars($restaurant['information_status'], ENT_QUOTES, 'UTF-8') ?></dd>
+                                <dd>各情報源の確認状態を参照</dd>
                             </div>
-                            <div>
-                                <dt>情報元URL</dt>
-                                <dd>
-                                    <?php if (!empty($restaurant['source_url'])): ?>
-                                        <a
-                                            href="<?= htmlspecialchars($restaurant['source_url'], ENT_QUOTES, 'UTF-8') ?>"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            class="source-url-link"
-                                        ><?= htmlspecialchars($restaurant['source_url'], ENT_QUOTES, 'UTF-8') ?> ↗</a>
-                                    <?php else: ?>
-                                        <span class="source-url-empty">未登録</span>
-                                    <?php endif; ?>
-                                </dd>
-                            </div>
+
                         </dl>
 
                         <div class="detail-map-frame">
@@ -287,7 +265,7 @@ if ($restaurant) {
                         <div class="related-list">
                             <?php foreach ($related_restaurants as $rel): ?>
                                 <?php
-                                $rel_tags = array_filter(array_map('trim', explode(',', $rel['allergy_tags'])));
+                                $rel_tags = officialTags($pdo, (int)$rel['id']);
                                 ?>
                                 <article class="related-card">
                                     <div class="related-image">
@@ -314,7 +292,14 @@ if ($restaurant) {
                 <?php endif; ?>
 
 
-                <!-- 戻るボタン -->
+                <section class="detail-panel"><div class="panel-header"><h3>公式情報源と確認状態</h3></div>
+<?php if (!$sources): ?><p>情報源は未登録です。</p><?php endif; ?>
+<?php foreach ($sources as $source): ?>
+<div class="allergy-note-box"><strong><?= htmlspecialchars($source['title'], ENT_QUOTES, 'UTF-8') ?></strong>
+<p>確認状態：<?= ['verified'=>'確認済み','pending'=>'未確認','invalid'=>'無効'][$source['verification_status']] ?? '未確認' ?> ／ 最終確認：<?= htmlspecialchars($source['checked_at'] ?? '未確認', ENT_QUOTES, 'UTF-8') ?></p>
+<?php if (filter_var($source['source_url'], FILTER_VALIDATE_URL) && in_array(strtolower(parse_url($source['source_url'], PHP_URL_SCHEME)), ['http','https'], true)): ?><a class="source-url-link" href="<?= htmlspecialchars($source['source_url'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener noreferrer"><?= htmlspecialchars($source['source_url'], ENT_QUOTES, 'UTF-8') ?></a><?php endif; ?>
+</div><?php endforeach; ?></section>
+<!-- 戻るボタン -->
                 <div class="detail-bottom-nav">
                     <a href="index.php#notice" class="btn-secondary">← 店舗一覧に戻る</a>
                     <a href="map.php" class="btn-outline">📍 マップから探す</a>

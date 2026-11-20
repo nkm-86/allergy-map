@@ -1,44 +1,11 @@
 <?php
 require_once __DIR__ . '/db_connect.php';
 
-// 検索パラメータの取得
-$keyword = isset($_GET['keyword']) ? trim((string)$_GET['keyword']) : '';
-$selected_allergies = isset($_GET['allergies']) && is_array($_GET['allergies']) ? $_GET['allergies'] : [];
-$selected_genre = isset($_GET['genre']) ? trim((string)$_GET['genre']) : '';
-
-// SQLクエリの組み立て
-$sql = 'SELECT * FROM restaurants WHERE 1=1';
-$params = [];
-
-// キーワード検索（店名・住所・ジャンル名）
-if ($keyword !== '') {
-    $sql .= ' AND (name LIKE :kw1 OR address LIKE :kw2 OR genre LIKE :kw3)';
-    $like_kw = '%' . $keyword . '%';
-    $params[':kw1'] = $like_kw;
-    $params[':kw2'] = $like_kw;
-    $params[':kw3'] = $like_kw;
-}
-
-// アレルギー絞り込み（チェックされた項目すべてに対応している店舗）
-foreach ($selected_allergies as $index => $allergy_code) {
-    if (array_key_exists($allergy_code, $ALLERGY_OPTIONS)) {
-        $param_key = ':allergy_' . $index;
-        $sql .= " AND FIND_IN_SET({$param_key}, allergy_codes) > 0";
-        $params[$param_key] = $allergy_code;
-    }
-}
-
-// ジャンル絞り込み
-if ($selected_genre !== '' && array_key_exists($selected_genre, $GENRE_OPTIONS)) {
-    $sql .= ' AND genre_code = :genre_code';
-    $params[':genre_code'] = $selected_genre;
-}
-
-$sql .= ' ORDER BY id ASC';
-
-$stmt = $pdo->prepare($sql);
-$stmt->execute($params);
-$restaurants = $stmt->fetchAll();
+$keyword = requestText($_GET,'keyword');
+$selected_allergies = isset($_GET['allergies']) && is_array($_GET['allergies']) ? array_values(array_filter($_GET['allergies'],'is_string')) : [];
+$selected_genre = requestText($_GET,'genre');
+$selected_prefecture = requestText($_GET,'prefecture');
+$restaurants = searchRestaurants($pdo, $_GET);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -139,7 +106,7 @@ $restaurants = $stmt->fetchAll();
                         type="text"
                         name="keyword"
                         value="<?= htmlspecialchars($keyword, ENT_QUOTES, 'UTF-8') ?>"
-                        placeholder="店名・地域・駅名などで検索"
+                        placeholder="店名・住所で検索"
                         aria-label="店名や地域で検索"
                     >
 
@@ -151,7 +118,7 @@ $restaurants = $stmt->fetchAll();
                 <!-- アレルギー検索 -->
                 <div class="allergy-filter">
 
-                    <h3>アレルギーから探す</h3>
+                    <h3>公式資料で確認済みの品目</h3>
 
                     <div class="allergy-list">
                         <?php foreach ($ALLERGY_OPTIONS as $code => $label): ?>
@@ -170,22 +137,9 @@ $restaurants = $stmt->fetchAll();
 
 
                 <!-- ジャンル検索 -->
-                <div class="genre-filter">
 
-                    <h3>お店のジャンル</h3>
 
-                    <select name="genre">
-                        <option value="">すべてのジャンル</option>
-                        <?php foreach ($GENRE_OPTIONS as $code => $label): ?>
-                            <option
-                                value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>"
-                                <?= $selected_genre === $code ? 'selected' : '' ?>
-                            ><?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?></option>
-                        <?php endforeach; ?>
-                    </select>
-
-                </div>
-
+            <?php require __DIR__ . '/app/search-filters.php'; ?>
             </form>
 
         </section>
@@ -212,7 +166,7 @@ $restaurants = $stmt->fetchAll();
                 <?php else: ?>
                     <?php foreach ($restaurants as $restaurant): ?>
                         <?php
-                        $tags = array_filter(array_map('trim', explode(',', $restaurant['allergy_tags'])));
+                        $tags = officialTags($pdo, (int)$restaurant['id']);
                         ?>
                         <article class="restaurant-card">
                             <div class="restaurant-image">
@@ -230,7 +184,7 @@ $restaurants = $stmt->fetchAll();
                                         <span><?= htmlspecialchars($tag, ENT_QUOTES, 'UTF-8') ?></span>
                                     <?php endforeach; ?>
                                 </div>
-                                <p class="information-status"><?= htmlspecialchars($restaurant['information_status'], ENT_QUOTES, 'UTF-8') ?></p>
+                                <p class="information-status">公式情報の確認状態は店舗詳細をご覧ください</p>
                                 <a href="detail.php?id=<?= (int)$restaurant['id'] ?>" class="detail-link">詳細を見る</a>
                             </div>
                         </article>

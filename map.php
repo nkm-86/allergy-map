@@ -1,35 +1,11 @@
 <?php
 require_once __DIR__ . '/db_connect.php';
 
-// 検索パラメータの取得
-$keyword = isset($_GET['keyword']) ? trim((string)$_GET['keyword']) : '';
-$selected_allergies = isset($_GET['allergies']) && is_array($_GET['allergies']) ? $_GET['allergies'] : [];
-
-// SQLクエリの組み立て
-$sql = 'SELECT * FROM restaurants WHERE 1=1';
-$params = [];
-
-if ($keyword !== '') {
-    $sql .= ' AND (name LIKE :kw1 OR address LIKE :kw2 OR genre LIKE :kw3)';
-    $like_kw = '%' . $keyword . '%';
-    $params[':kw1'] = $like_kw;
-    $params[':kw2'] = $like_kw;
-    $params[':kw3'] = $like_kw;
-}
-
-foreach ($selected_allergies as $index => $allergy_code) {
-    if (array_key_exists($allergy_code, $ALLERGY_OPTIONS)) {
-        $param_key = ':allergy_' . $index;
-        $sql .= " AND FIND_IN_SET({$param_key}, allergy_codes) > 0";
-        $params[$param_key] = $allergy_code;
-    }
-}
-
-$sql .= ' ORDER BY id ASC';
-
-$stmt = $pdo->prepare($sql);
-$stmt->execute($params);
-$restaurants = $stmt->fetchAll();
+$keyword = requestText($_GET,'keyword');
+$selected_allergies = isset($_GET['allergies']) && is_array($_GET['allergies']) ? array_values(array_filter($_GET['allergies'],'is_string')) : [];
+$selected_genre = requestText($_GET,'genre');
+$selected_prefecture = requestText($_GET,'prefecture');
+$restaurants = searchRestaurants($pdo, $_GET);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -91,7 +67,7 @@ $restaurants = $stmt->fetchAll();
                         type="text"
                         name="keyword"
                         value="<?= htmlspecialchars($keyword, ENT_QUOTES, 'UTF-8') ?>"
-                        placeholder="地域・駅名・店名などで検索"
+                        placeholder="店名・住所で検索"
                         aria-label="地域や駅名で検索"
                     >
 
@@ -100,7 +76,7 @@ $restaurants = $stmt->fetchAll();
 
                 <div class="map-filter">
 
-                    <h3>アレルギーで絞り込む</h3>
+                    <h3>公式資料で確認済みの品目</h3>
 
                     <div class="map-filter-list">
                         <?php foreach ($ALLERGY_OPTIONS as $code => $label): ?>
@@ -117,6 +93,7 @@ $restaurants = $stmt->fetchAll();
 
                 </div>
 
+            <?php require __DIR__ . '/app/search-filters.php'; ?>
             </form>
 
         </section>
@@ -132,7 +109,7 @@ $restaurants = $stmt->fetchAll();
 
                 <div class="map-panel-heading"><div><span class="map-live-dot"></span> 梅田・大阪駅周辺</div><button type="button" id="show-all">すべて表示 ↗</button></div>
                 <div id="restaurant-map" role="region" aria-label="店舗の位置を表示する地図"><p class="map-fallback">地図を読み込み中です。店舗情報は一覧からご覧いただけます。</p></div>
-                <p class="map-location-note">ピンは住所付近の目安です。正確な場所は店舗詳細でご確認ください。</p>
+                <p class="map-location-note">座標登録済みの店舗のみ地図に表示します。座標未登録の店舗も一覧から確認できます。</p>
                 <div class="map-selected" id="map-selected" aria-live="polite">店舗の「地図で見る」か、地図の番号を選んでください。</div>
             </div>
 
@@ -150,9 +127,9 @@ $restaurants = $stmt->fetchAll();
                 <div class="map-card-grid">
                 <?php foreach ($restaurants as $index => $restaurant): ?>
                     <?php
-                    $tags = array_filter(array_map('trim', explode(',', $restaurant['allergy_tags'])));
+                    $tags = officialTags($pdo, (int)$restaurant['id']);
                     ?>
-                    <article class="map-restaurant-card" data-name="<?= htmlspecialchars($restaurant['name'], ENT_QUOTES, 'UTF-8') ?>" data-address="<?= htmlspecialchars($restaurant['address'], ENT_QUOTES, 'UTF-8') ?>">
+                    <article class="map-restaurant-card" data-latitude="<?= htmlspecialchars((string)$restaurant['latitude'], ENT_QUOTES, 'UTF-8') ?>" data-longitude="<?= htmlspecialchars((string)$restaurant['longitude'], ENT_QUOTES, 'UTF-8') ?>" data-name="<?= htmlspecialchars($restaurant['name'], ENT_QUOTES, 'UTF-8') ?>" data-address="<?= htmlspecialchars($restaurant['address'], ENT_QUOTES, 'UTF-8') ?>">
 
                         <div class="map-restaurant-image"><span class="card-number"><?= $index + 1 ?></span>
                             <img

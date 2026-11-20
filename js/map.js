@@ -3,25 +3,14 @@
     const cards = [...document.querySelectorAll('.map-restaurant-card')];
     const canvas = document.getElementById('restaurant-map');
     const selected = document.getElementById('map-selected');
-    // Approximate address-area positions, not verified entrances. Never guess a position for unknown addresses.
-    const areas = [
-        ['茶屋町2-16', 34.7064, 135.4997],
-        ['堂山町1-5', 34.7029, 135.5033],
-        ['角田町9-17', 34.7041, 135.4987],
-        ['梅田3', 34.7039, 135.4955],
-        ['梅田1-13-13', 34.7011, 135.4974],
-        ['中崎西1', 34.7066, 135.5053],
-        ['角田町8-7', 34.7026, 135.4989],
-        ['芝田1-1-3', 34.7053, 135.4982],
-    ];
     let map;
     let layer;
     const markers = new Map();
     const motion = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     function position(card) {
-        const address = card.dataset.address || card.querySelector('.card-address')?.textContent || '';
-        const normalized = address.replace(/丁目/g, '-').replace(/[－ー]/g, '-').replace(/\s/g, '');
-        return areas.find(([key]) => normalized.includes(key))?.slice(1);
+        if (!card.dataset.latitude || !card.dataset.longitude) return null;
+        const lat = Number(card.dataset.latitude), lng = Number(card.dataset.longitude);
+        return Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat)<=90 && Math.abs(lng)<=180 ? [lat,lng] : null;
     }
     function selectCard(card, fromMarker = false) {
         cards.forEach(item => {
@@ -89,7 +78,7 @@
         let hasTiles = false;
         tiles.on('tileload', () => { hasTiles = true; });
         tiles.on('tileerror', () => {
-            if (!hasTiles) document.querySelector('.map-location-note').textContent = '地図背景を読み込めません。ネットワーク接続をご確認ください。ピンは住所付近の目安です。';
+            if (!hasTiles) document.querySelector('.map-location-note').textContent = '地図背景を読み込めません。ネットワーク接続をご確認ください。座標登録済みの店舗のみ表示します。';
         });
         layer = L.layerGroup().addTo(map);
         refreshMarkers();
@@ -99,24 +88,4 @@
         document.getElementById('show-all').disabled = true;
     }
     document.getElementById('show-all').addEventListener('click', fitAll);
-    // The HTML preview filters locally; the PHP page keeps its existing database search.
-    const previewForm = document.querySelector('.preview-search');
-    if (previewForm) {
-        previewForm.addEventListener('submit', event => {
-            event.preventDefault();
-            const keyword = previewForm.querySelector('input[type=text]').value.trim().toLocaleLowerCase();
-            const allergies = [...previewForm.querySelectorAll('input:checked')].map(input => input.parentElement.textContent.trim());
-            cards.forEach(card => {
-                const tags = [...card.querySelectorAll('.map-allergy-info span')].map(tag => tag.textContent.trim());
-                card.hidden = !card.textContent.toLocaleLowerCase().includes(keyword) || !allergies.every(allergy => tags.some(tag => tag.startsWith(allergy + '不使用') || tag.startsWith(allergy + '抜き')));
-                card.classList.remove('is-selected');
-                card.querySelector('.show-on-map').setAttribute('aria-pressed', 'false');
-            });
-            const count = cards.filter(card => !card.hidden).length;
-            document.querySelector('.result-count').textContent = `${count}件の店舗が見つかりました`;
-            document.querySelector('.map-empty').hidden = count > 0;
-            selected.textContent = '店舗の「地図で見る」か、地図の番号を選んでください。';
-            refreshMarkers();
-        });
-    }
 })();
